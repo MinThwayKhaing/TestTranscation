@@ -69,7 +69,7 @@ exports.minusPointUser = async (points, customerID) => {
   }
 };
 
-exports.selectWalletBalanceWithRowLock = async (customerId) => {
+exports.selectWalletBalanceWithRowLock = async (customerId, t) => {
   try {
     const [user] = await db.query(
       `SELECT walletBalance FROM Users WHERE customerID = :customerId FOR UPDATE`,
@@ -77,6 +77,7 @@ exports.selectWalletBalanceWithRowLock = async (customerId) => {
         replacements: { customerId },
         type: db.QueryTypes.SELECT,
         lock: true,
+        transaction: t,
       }
     );
 

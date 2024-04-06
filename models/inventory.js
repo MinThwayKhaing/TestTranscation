@@ -17,6 +17,10 @@ const Inventory = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    quantity: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     deletestatus: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
