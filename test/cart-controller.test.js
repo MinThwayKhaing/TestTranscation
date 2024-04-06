@@ -8,9 +8,6 @@ describe("Cart API Endpoints", () => {
     await Cart.destroy({ where: {}, truncate: true });
   });
 
-  let userId = 1;
-  let cartId = 1;
-
   test("POST /cart/carts - Create a new cart", async () => {
     const cartData = {
       customerID: 1,
@@ -25,16 +22,14 @@ describe("Cart API Endpoints", () => {
   });
 
   test("GET /cart/carts - Get carts", async () => {
-    const response = await request(app).get(`/cart/getcart/${userId}`).send();
+    const response = await request(app).get(`/cart/getcart/1`).send();
 
     expect(response.statusCode).toBe(200);
     expect(response.body.success).toBe(true);
   });
 
   test("DELETE /cart/deleteCart - Delete carts", async () => {
-    const response = await request(app)
-      .delete(`/cart/deleteCart/${cartId}`)
-      .send();
+    const response = await request(app).delete(`/cart/deleteCart/1`).send();
 
     expect(response.statusCode).toBe(200);
     expect(response.body.success).toBe(true);

@@ -6,7 +6,8 @@
     "start": "node ./bin/www",
     "dev": "nodemon app",
     "test":"jest",
-    "test:cart": "jest test/cart-controller.test.js"
+    "test:cart": "jest test/cart-controller.test.js",
+    "test:inventory": "jest test/inventory-controller.test.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
