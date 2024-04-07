@@ -4,10 +4,6 @@ const app = require("../app");
 const Inventory = require("../models/inventory");
 
 describe("Inventory API Endpoints", () => {
-  beforeEach(async () => {
-    await Inventory.destroy({ where: {}, truncate: true });
-  });
-
   test("POST /inventory/inventories - Create a new inventory", async () => {
     const inventoryData = {
       price: "15",

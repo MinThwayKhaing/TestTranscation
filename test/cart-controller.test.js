@@ -4,10 +4,6 @@ const app = require("../app");
 const Cart = require("../models/cart");
 
 describe("Cart API Endpoints", () => {
-  beforeEach(async () => {
-    await Cart.destroy({ where: {}, truncate: true });
-  });
-
   test("POST /cart/carts - Create a new cart", async () => {
     const cartData = {
       customerID: 1,
