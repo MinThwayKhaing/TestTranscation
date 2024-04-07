@@ -27,6 +27,15 @@ describe("Inventory API Endpoints", () => {
     expect(response.body.success).toBe(true);
   });
 
+  test("DELETE /inventory/deleteInventory - Delete inventory", async () => {
+    const response = await request(app)
+      .delete(`/inventory/deleteInventory/1`)
+      .send();
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body.success).toBe(true);
+  });
+
   afterAll((done) => {
     store.server.close(() => {
       console.log("Server closed");
