@@ -1,14 +1,16 @@
 const request = require("supertest");
 const store = require("../constant");
 const app = require("../app");
-const Inventory = require("../models/inventory");
 
 describe("Inventory API Endpoints", () => {
+  let userId = 1;
+  let id = 0;
+
   test("POST /inventory/inventories - Create a new inventory", async () => {
     const inventoryData = {
       price: "15",
       productName: "Product B",
-      userId: 1,
+      userId: userId,
       quantity: 15,
     };
 
@@ -16,12 +18,23 @@ describe("Inventory API Endpoints", () => {
       .post("/inventory/inventories")
       .send(inventoryData);
 
+    id = response.body.data.productId;
+
     expect(response.statusCode).toBe(201);
     expect(response.body.success).toBe(true);
   });
 
+  test("GET /inventory/getinventories - Get inventories", async () => {
+    const response = await request(app).get(`/inventory/getinventories`).send();
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body.success).toBe(true);
+  });
+
   test("GET /inventory/getinventory - Get inventory", async () => {
-    const response = await request(app).get(`/inventory/getinventory/1`).send();
+    const response = await request(app)
+      .get(`/inventory/getinventory/${id}`)
+      .send();
 
     expect(response.statusCode).toBe(200);
     expect(response.body.success).toBe(true);
@@ -29,7 +42,7 @@ describe("Inventory API Endpoints", () => {
 
   test("DELETE /inventory/deleteInventory - Delete inventory", async () => {
     const response = await request(app)
-      .delete(`/inventory/deleteInventory/1`)
+      .delete(`/inventory/deleteInventory/${id}`)
       .send();
 
     expect(response.statusCode).toBe(200);
