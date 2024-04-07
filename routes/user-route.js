@@ -8,5 +8,5 @@ const userController = require("../controllers/user-controller");
 
 // Insert user route
 router.post("/users", userController.createUser);
-
+router.post("/pointTransfer", userController.pointTransfer);
 module.exports = router;

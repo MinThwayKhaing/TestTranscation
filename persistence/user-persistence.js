@@ -34,6 +34,7 @@ exports.findById = async (userId) => {
 
 exports.addPointToUser = async (points, customerID, t) => {
   try {
+    console.log("points::", points, "customerID::", customerID);
     await userModel.increment(
       { walletBalance: points },
       { transaction: t, where: { customerID } }
@@ -44,19 +45,18 @@ exports.addPointToUser = async (points, customerID, t) => {
   }
 };
 
-exports.minusPointUser = async (points, customerID) => {
+exports.minusPointUser = async (customerID, points, t) => {
   try {
+    console.log("customerID::", customerID, "points", points);
     // Execute a raw SQL query to increment the walletBalance
     const [affectedRows] = await db.query(
       `UPDATE Users SET walletBalance = walletBalance - :points WHERE customerID = :customerID`,
       {
         replacements: { points, customerID },
+        transaction: t,
       }
     );
-
-    console.log("Affected Rows:", affectedRows);
-
-    if (affectedRows > 0) {
+    if (affectedRows.affectedRows > 0) {
       return true;
     } else {
       throw new Error(
@@ -71,7 +71,7 @@ exports.minusPointUser = async (points, customerID) => {
 
 exports.selectWalletBalanceWithRowLock = async (customerId, t) => {
   try {
-    const [user] = await db.query(
+    const result = await db.query(
       `SELECT walletBalance FROM Users WHERE customerID = :customerId FOR UPDATE`,
       {
         replacements: { customerId },
@@ -81,7 +81,11 @@ exports.selectWalletBalanceWithRowLock = async (customerId, t) => {
       }
     );
 
-    return user && user.length ? user[0].walletBalance : null;
+    if (result && result.length > 0 && result[0].walletBalance !== undefined) {
+      return result[0].walletBalance;
+    } else {
+      return null;
+    }
   } catch (error) {
     console.error("Error occurred during wallet balance selection:", error);
     throw error;

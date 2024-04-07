@@ -9,7 +9,7 @@ const Transaction = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    customer_id: {
+    from_customer_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },

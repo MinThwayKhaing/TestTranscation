@@ -11,3 +11,13 @@ exports.createUser = async (req, res) => {
     res.status(500).json({ success: false, error: "Internal server error" });
   }
 };
+
+exports.pointTransfer = async (req, res) => {
+  try {
+    const result = await user.pointTransfer(req.body, res);
+    return result;
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: "Internal server error" });
+  }
+};

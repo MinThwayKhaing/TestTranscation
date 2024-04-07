@@ -1,27 +1,27 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
-const Product = sequelize.define(
-  "Product",
+const PurchaseHistory = sequelize.define(
+  "PurchaseHistory",
   {
-    productId: {
+    id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
-      type: DataTypes.STRING,
+    totalamount: {
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    pointValue: {
+    productId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    stockQuantity: {
+    customerId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    quantity: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -29,4 +29,4 @@ const Product = sequelize.define(
   {}
 );
 
-module.exports = Product;
+module.exports = PurchaseHistory;

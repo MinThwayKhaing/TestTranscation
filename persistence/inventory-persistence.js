@@ -42,12 +42,13 @@ exports.getAllInventories = async (page, limit, search) => {
   try {
     const offset = (page - 1) * limit;
 
-    let query = "SELECT productName, productId, price FROM inventories";
-    let countQuery = "SELECT COUNT(*) AS total FROM inventories";
+    let query =
+      "SELECT productName, productId, price FROM Inventories WHERE deletestatus=0";
+    let countQuery = "SELECT COUNT(*) AS total FROM Inventories";
     const values = [];
     if (search) {
-      query += " WHERE productName LIKE ? AND deletestatus=0";
-      countQuery += " WHERE productName LIKE ? AND deletestatus=0";
+      query += " AND productName LIKE ? ";
+      countQuery += " AND productName LIKE ? ";
       values.push(`%${search}%`);
     }
     query += " ORDER BY productId LIMIT ? OFFSET ?";
@@ -105,5 +106,54 @@ exports.deleteById = async (id, res) => {
     return res
       .status(500)
       .json({ success: false, error: "Internal server error" });
+  }
+};
+
+exports.checkQuantity = async (productId, t) => {
+  try {
+    const result = await db.query(
+      `SELECT quantity FROM inventories WHERE productId = :productId FOR UPDATE`,
+      {
+        replacements: { productId },
+        type: db.QueryTypes.SELECT,
+        lock: true,
+        transaction: t,
+      }
+    );
+
+    if (result && result.length > 0 && result[0].quantity !== undefined) {
+      return result[0].quantity;
+    } else {
+      console.error("Quantity not found for productId:", productId);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error occurred during quantity check:", error);
+    throw error;
+  }
+};
+
+exports.updateInventoryQuantities = async (quantity, productId, t) => {
+  try {
+    const [affectedRows] = await db.query(
+      `UPDATE Inventories SET quantity = quantity - :quantity WHERE productId = :productId`,
+      {
+        replacements: { quantity, productId },
+        transaction: t,
+      }
+    );
+
+    if (affectedRows.affectedRows > 0) {
+      return true;
+    } else {
+      console.error("No rows affected by the update operation.");
+      throw new Error("Failed to update inventory: No rows affected");
+    }
+  } catch (error) {
+    console.error(
+      "Error occurred during updateInventoryQuantities update:",
+      error
+    );
+    throw error;
   }
 };

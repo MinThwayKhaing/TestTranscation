@@ -13,8 +13,12 @@ const PointTransfer = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    transferTimestamp: {
-      type: DataTypes.DATE,
+    fromCustomerId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    toCustomerId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
   },
